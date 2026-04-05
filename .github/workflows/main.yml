@@ -1,7 +1,7 @@
 name: Accept Friend Requests
 on:
   schedule:
-    - cron: '*/30 * * * *'  # Runs every 30 minutes
+    - cron: '*/25 * * * *'  # Runs every 25 minutes
   workflow_dispatch:
 jobs:
   run-script:
@@ -21,5 +21,6 @@ jobs:
         env:
           GD_ACCOUNT_ID: ${{ secrets.GD_ACCOUNT_ID }}
           GD_PASSWORD:   ${{ secrets.GD_PASSWORD }}
+          SOCKS5_PROXY:  ${{ secrets.SOCKS5_PROXY }}
         run: |
           python friend.py
