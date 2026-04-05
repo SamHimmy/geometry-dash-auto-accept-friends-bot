@@ -1,12 +1,13 @@
 import hashlib
 import time
 import requests
+import os
 
 # ─────────────────────────────────────────
 #  CONFIGURE YOUR ACCOUNT DETAILS HERE
 # ─────────────────────────────────────────
-ACCOUNT_ID = 40660115
-PASSWORD   = "Coolguy1"
+ACCOUNT_ID = int(os.environ["GD_ACCOUNT_ID"])
+PASSWORD   = os.environ["GD_PASSWORD"]
 
 # ─────────────────────────────────────────
 #  SOCKS5 PROXY CONFIGURATION
