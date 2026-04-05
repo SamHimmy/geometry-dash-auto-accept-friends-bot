@@ -5,8 +5,16 @@ import requests
 # ─────────────────────────────────────────
 #  CONFIGURE YOUR ACCOUNT DETAILS HERE
 # ─────────────────────────────────────────
-ACCOUNT_ID = 40660115                    # Your numeric GD account ID
-PASSWORD   = "Coolguy1" # Your GD account password
+ACCOUNT_ID = 40660115
+PASSWORD   = "Coolguy1"
+
+# ─────────────────────────────────────────
+#  SOCKS5 PROXY CONFIGURATION
+#  Format: "socks5://user:pass@host:port"
+#  Or without auth: "socks5://host:port"
+#  Set to None to disable
+# ─────────────────────────────────────────
+SOCKS5_PROXY = "socks5://174.64.199.79:4145"  # e.g. "socks5://127.0.0.1:1080"
 
 BASE_URL = "http://www.boomlings.com/database"
 SECRET   = "Wmfd2893gb7"
@@ -15,6 +23,8 @@ HEADERS = {
     "User-Agent": "",
     "Content-Type": "application/x-www-form-urlencoded",
 }
+
+PROXIES = {"http": SOCKS5_PROXY, "https": SOCKS5_PROXY} if SOCKS5_PROXY else None
 
 
 # ── Auth ─────────────────────────────────
@@ -45,6 +55,7 @@ def get_friend_requests(account_id: int, gjp2: str, page: int = 0) -> str:
     resp = requests.post(
         f"{BASE_URL}/getGJFriendRequests20.php",
         headers=HEADERS,
+        proxies=PROXIES,
         data={
             "accountID":     account_id,
             "gjp2":          gjp2,
@@ -62,6 +73,7 @@ def accept_friend_request(account_id: int, gjp2: str,
     resp = requests.post(
         f"{BASE_URL}/acceptGJFriendRequest20.php",
         headers=HEADERS,
+        proxies=PROXIES,
         data={
             "accountID":       account_id,
             "gjp2":            gjp2,
@@ -80,6 +92,10 @@ def accept_friend_request(account_id: int, gjp2: str,
 def accept_all_friend_requests():
     gjp2 = generate_gjp2(PASSWORD)
     print(f"[*] Starting — account ID: {ACCOUNT_ID}")
+    if SOCKS5_PROXY:
+        print(f"[*] Using SOCKS5 proxy: {SOCKS5_PROXY}")
+    else:
+        print("[*] No proxy configured (direct connection)")
 
     total_accepted = 0
     page = 0
@@ -124,7 +140,6 @@ def accept_all_friend_requests():
 
             time.sleep(0.75)
 
-        # Pagination check
         try:
             meta = raw.split("#")[1]
             total_str, _, per_page_str = meta.split(":")
